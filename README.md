@@ -29,6 +29,7 @@ My personal dotfiles managed with GNU Stow.
    ```
 
 3. Stow the configurations:
+
    ```bash
    stow .
    ```
@@ -40,5 +41,5 @@ My personal dotfiles managed with GNU Stow.
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # Other dependencies
-sudo pacman -S fzf zsh-autopair zsh-autosuggestions zsh-history-substring-search fast-syntax-highlighting starship zoxide bat xcp fd pnpm bitwarden
+sudo pacman -S fzf zsh-autopair zsh-autosuggestions zsh-history-substring-search fast-syntax-highlighting starship zoxide bat xcp fd pnpm bitwarden btop lsd nvim lazygit
 ```
