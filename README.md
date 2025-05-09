@@ -39,9 +39,6 @@ My personal dotfiles managed with GNU Stow.
 # Oh My Zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-# Starship prompt
-curl -sS https://starship.rs/install.sh | sh
-
 # Other dependencies
-sudo pacman -S fzf zsh-autopair zsh-autosuggestions fast-syntax-highlighting
+sudo pacman -S fzf zsh-autopair zsh-autosuggestions zsh-history-substring-search fast-syntax-highlighting starship zoxide bat xcp fd pnpm bitwarden
 ```
