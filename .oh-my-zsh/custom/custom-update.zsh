@@ -1,10 +1,9 @@
 #!/usr/bin/env zsh
 #
 # Custom Update System for Oh My Zsh and Custom Plugins
-# Save this file to $ZSH_CUSTOM/custom-update.zsh
 #
 
-# Configuration (change these values as needed)
+# Configuration
 # ----------------------------------------------
 
 # Prevent job control messages

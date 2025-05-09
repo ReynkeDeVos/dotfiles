@@ -1,0 +1,505 @@
+# ===== DISPLAY INTERFACE =====
+
+# Use the curses-based interface
+OPTIONS=windowtype:curses
+#OPTIONS=IBMgraphics
+#OPTIONS=symset:IBMgraphics
+#OPTIONS=DECgraphics
+#OPTIONS=UTF8
+#OPTIONS=UTF8Graphics
+
+# Enable hilite_pet
+OPTIONS=hilite_pet
+
+# Show lit corridors distinctly
+OPTIONS=lit_corridor
+
+# Display experience points on status line
+OPTIONS=showexp
+
+# Display current score on status line
+OPTIONS=showscore
+
+# Show elapsed game time in turns
+OPTIONS=time
+
+# Use dark gray instead of blue for black items
+OPTIONS=use_darkgray
+
+# Enable mouse support
+OPTIONS=mouse_support
+
+# Use popup dialogs for input
+OPTIONS=popup_dialog
+
+# Always show inventory window
+OPTIONS=perm_invent
+
+# Display inventory object symbols
+OPTIONS=menu_objsyms
+
+# You can reduce message history to 60 if 1000 is too large
+OPTIONS=msghistory:1000
+
+# Show out-of-sight areas of lit rooms
+OPTIONS=dark_room
+
+# Highlight piles of items on the floor
+OPTIONS=hilite_pile
+
+# Use '0' for boulders instead of the default
+OPTIONS=boulder:0
+
+# Use 3 lines for status instead of 2
+OPTIONS=statuslines:3
+
+# Display hitpoint bar
+OPTIONS=hitpointbar
+
+# Set hitpoint warning percentage (default is 10%)
+OPTIONS=warnings:15
+
+# Enable status highlighting and set to highlight for 10 turns
+OPTIONS=statushilites:10
+
+# ===== STATUS HIGHLIGHTING =====
+
+# Show HP with colors based on percentage
+OPTIONS=hilite_status:hitpoints/100%/brightgreen
+OPTIONS=hilite_status:hitpoints/<100%/green
+OPTIONS=hilite_status:hitpoints/<60%/yellow
+OPTIONS=hilite_status:hitpoints/<40%/red
+
+# Track changes in maximum HP
+OPTIONS=hilite_status:hitpoints-max/always/green/up/bright-green/down/orange
+
+# Show power (magic) with colors
+OPTIONS=hilite_status:power/100%/green
+OPTIONS=hilite_status:power/<100%/yellow
+OPTIONS=hilite_status:power/<50%/orange
+OPTIONS=hilite_status:power/<25%/red
+
+# Track changes in maximum power
+OPTIONS=hilite_status:power-max/always/cyan/up/bright-cyan/down/bright-blue
+
+# Highlight encumbrance levels
+OPTIONS=hilite_status:carrying-capacity/burdened/yellow
+OPTIONS=hilite_status:carrying-capacity/stressed/orange
+OPTIONS=hilite_status:carrying-capacity/strained/red
+OPTIONS=hilite_status:carrying-capacity/overtaxed/red&inverse
+OPTIONS=hilite_status:carrying-capacity/overloaded/red&inverse&blink
+
+# Highlight gold
+OPTIONS=hilite_status:gold/always/yellow
+
+# Highlight hunger states
+OPTIONS=hilite_status:hunger/satiated/yellow
+OPTIONS=hilite_status:hunger/hungry/orange
+OPTIONS=hilite_status:hunger/weak/red
+OPTIONS=hilite_status:hunger/fainting/red&inverse
+
+# Highlight conditions
+OPTIONS=hilite_status:condition/stone/red&inverse
+OPTIONS=hilite_status:condition/slime/red&inverse
+OPTIONS=hilite_status:condition/strngl/red&inverse
+OPTIONS=hilite_status:condition/foodpois/red&inverse
+OPTIONS=hilite_status:condition/termill/red&inverse
+OPTIONS=hilite_status:condition/blind/yellow
+OPTIONS=hilite_status:condition/deaf/yellow
+OPTIONS=hilite_status:condition/stun/yellow
+OPTIONS=hilite_status:condition/conf/yellow
+OPTIONS=hilite_status:condition/hallu/yellow
+OPTIONS=hilite_status:condition/lev/cyan
+OPTIONS=hilite_status:condition/fly/cyan
+OPTIONS=hilite_status:condition/ride/cyan
+
+# ===== SYMBOL CUSTOMIZATION =====
+
+# Make ghosts more visible with an X
+SYMBOLS=S_ghost:X
+
+# Display lava as tilde
+SYMBOLS=S_lava:~
+
+# Display pools as tilde
+SYMBOLS=S_pool:~
+
+# Display water as tilde
+SYMBOLS=S_water:~
+
+# ===== GAMEPLAY OPTIONS =====
+
+# Automatically dig when wielding a tool
+OPTIONS=autodig
+
+# Auto-quiver suitable ammo when current quiver is empty
+OPTIONS=autoquiver
+
+# Use numpad for movement with 5 as 'G' (goto)
+OPTIONS=number_pad:1
+
+# Only auto-pickup if it won't encumber you at all
+OPTIONS=pickup_burden:unencumbered
+
+# Auto-pickup types (currency, amulets, scrolls, rings, potions, wands, spellbooks)
+OPTIONS=pickup_types:$"?+!=/
+
+# Push old weapon into secondary slot when wielding new one
+OPTIONS=pushweapon
+
+# Sort inventory and loot lists alphabetically by type
+OPTIONS=sortloot:full
+
+# Use a,b,c shortcuts in looting menu
+OPTIONS=lootabc
+
+# Full menu interface for selections
+OPTIONS=menustyle:full
+
+# Display menu headings in inverse video
+OPTIONS=menu_headings:inverse
+
+# ===== PROMPT OPTIONS =====
+
+# Require confirmations for dangerous actions
+OPTIONS=paranoid_confirmation:Confirm quit attack pray wand Remove
+
+# ===== KEY BINDINGS =====
+
+# Bind herecmdmenu to Alt+h (current location command menu)
+BIND=M-h:herecmdmenu
+
+# Bind therecmdmenu to Alt+t (adjacent location command menu)
+BIND=M-t:therecmdmenu
+
+# ===== DISCLOSURE OPTIONS =====
+
+# Control end-of-game disclosure options
+OPTIONS=disclose:+i +a +v +g +c
+
+# ===== AUTOPICKUP EXCEPTIONS =====
+
+# Always pick up magic lamps
+AUTOPICKUP_EXCEPTION="<.*magic lamp.*"
+
+# Always pick up wands of wishing
+AUTOPICKUP_EXCEPTION="<.*wand of wishing.*"
+
+# Always pick up wands of death
+AUTOPICKUP_EXCEPTION="<.*wand of death.*"
+
+# Always pick up wands of polymorph
+AUTOPICKUP_EXCEPTION="<.*wand of polymorph.*"
+
+# Always pick up keys
+AUTOPICKUP_EXCEPTION="<.*key.*"
+
+# Always pick up scrolls of enchant armor
+AUTOPICKUP_EXCEPTION="<.*scroll of enchant armor.*"
+
+# Always pick up scrolls of enchant weapon
+AUTOPICKUP_EXCEPTION="<.*scroll of enchant weapon.*"
+
+# Always pick up scrolls of remove curse
+AUTOPICKUP_EXCEPTION="<.*scroll of remove curse.*"
+
+# Don't pick up worthless gems
+AUTOPICKUP_EXCEPTION=">.*worthless piece of.*"
+
+# Don't pick up loadstones
+AUTOPICKUP_EXCEPTION=">.*loadstone.*"
+
+# Don't pick up flint stones
+AUTOPICKUP_EXCEPTION=">.*flint stone.*"
+
+# Don't pick up rocks
+AUTOPICKUP_EXCEPTION=">.*rock.*"
+
+# Don't pick up stones
+AUTOPICKUP_EXCEPTION=">.*stone.*"
+
+# Always pick up amulets of life saving
+AUTOPICKUP_EXCEPTION="<.*amulet of life saving.*"
+
+# Always pick up magic markers
+AUTOPICKUP_EXCEPTION="<.*magic marker.*"
+
+# Always pick up amulets of reflection
+AUTOPICKUP_EXCEPTION="<.*amulet of reflection.*"
+
+# Always pick up scrolls of charging
+AUTOPICKUP_EXCEPTION="<.*scroll of charging.*"
+
+# Always pick up scrolls of genocide
+AUTOPICKUP_EXCEPTION="<.*scroll of genocide.*"
+
+# Always pick up scrolls of identify
+AUTOPICKUP_EXCEPTION="<.*scroll of identify.*"
+
+# Always pick up potions of full healing
+AUTOPICKUP_EXCEPTION="<.*potion of full healing.*"
+
+# Always pick up potions of gain level
+AUTOPICKUP_EXCEPTION="<.*potion of gain level.*"
+
+# Always pick up rings of free action
+AUTOPICKUP_EXCEPTION="<.*ring of free action.*"
+
+# Always pick up rings of levitation
+AUTOPICKUP_EXCEPTION="<.*ring of levitation.*"
+
+# Always pick up rings of teleport control
+AUTOPICKUP_EXCEPTION="<.*ring of teleport control.*"
+
+# Don't pick up any items marked as cursed
+AUTOPICKUP_EXCEPTION=">.*cursed.*"
+
+# Don't pick up empty items 
+AUTOPICKUP_EXCEPTION=">.* named empty.*"
+
+# ===== MESSAGE TYPES =====
+
+# Hide messages about swapping places with pets (improved version)
+MSGTYPE=hide "You swap places with .*"
+
+# Reduce repetitive item visibility
+MSGTYPE=norep "You see here a.*"
+
+# Hide repetitive boulder messages
+MSGTYPE=hide "With great effort you move the boulder"
+
+# Warn about delayed petrification
+MSGTYPE=stop "You are slowing down"
+MSGTYPE=stop "Your limbs are stiffening."
+
+# Warn about sliming (green slime)
+MSGTYPE=stop "You don't feel very well."
+MSGTYPE=stop "You are turning a little green."
+MSGTYPE=stop "Your limbs are getting oozy."
+MSGTYPE=stop "Your skin begins to peel away."
+MSGTYPE=stop "You are turning into a green slime."
+
+# Warn about drowning/choking
+MSGTYPE=stop "You find it hard to breathe"
+MSGTYPE=stop "It constricts your throat!"
+MSGTYPE=stop "You're gasping for air."
+MSGTYPE=stop "Your blood is having trouble reaching your brain."
+MSGTYPE=stop "You can no longer breathe."
+MSGTYPE=stop "You're turning blue."
+MSGTYPE=stop "Your consciousness is fading."
+
+# Warn about constriction and grabbing
+MSGTYPE=stop "The .* (grabs|swings itself around) you!"
+
+# Warn about lycanthropy/petrification
+MSGTYPE=stop "You are turning a little"
+
+# Warn when pet is in danger of starvation
+MSGTYPE=stop "You reluctantly"
+
+# Alert when shopkeeper picks up items
+MSGTYPE=stop "picks up"
+
+# Warn about hunger
+MSGTYPE=stop "You feel hungry"
+
+# Warn about increasing hunger
+MSGTYPE=stop "You are beginning to feel hungry"
+
+# Warn about weakness from hunger
+MSGTYPE=stop "You feel weak now"
+MSGTYPE=stop "You feel weak"
+
+# Warn about increasing weakness from hunger
+MSGTYPE=stop "You are beginning to feel weak"
+
+# Warn about fainting from hunger
+MSGTYPE=stop "You faint from lack of food"
+
+# Alert for vibrating square (important for endgame)
+MSGTYPE=stop "You feel a strange vibration"
+MSGTYPE=stop "You feel a strange vibration under your *."
+MSGTYPE=stop "You feel a strange vibration beneath you."
+
+# Alert for #enhance opportunity
+MSGTYPE=stop "You feel more confident"
+
+# Warn about approaching death
+MSGTYPE=stop "You hear the howling of the CwnAnnwn..."
+
+# Warn about food poisoning
+MSGTYPE=stop "You feel deathly sick"
+MSGTYPE=stop "You feel (much|even) worse."
+
+# Warn about falling into pits
+MSGTYPE=stop "You fall into a pit!"
+
+# Warn about falling through trapdoors
+MSGTYPE=stop "You fall through a trapdoor!"
+
+# Warn about losing items to theft
+MSGTYPE=stop "stole "
+
+# Additional warning messages
+MSGTYPE=stop "You are turning a little .*"
+MSGTYPE=stop "You feel feverish*"
+MSGTYPE=stop "You find a*"
+MSGTYPE=stop "You have a .* feeling for a moment, then it passes."
+MSGTYPE=stop "You sense a faint wave of psychic energy"
+MSGTYPE=stop "The scroll turns to dust as you pick it up."
+MSGTYPE=stop "You wrest .*"
+MSGTYPE=stop ".*Vorpal Blade.*"
+
+# Things that aren't dangerous by themselves but could kill you if you don't notice.
+MSGTYPE=stop "You fail to cast the spell correctly."
+MSGTYPE=stop "You see here a c(hi|o)ckatrice corpse." 
+
+# ===== MENU COLORS =====
+
+# Enable menu coloring
+OPTIONS=menucolors
+
+# Color blessed items green
+MENUCOLOR=" blessed "=green
+
+# Color cursed items red
+MENUCOLOR=" cursed "=red
+
+# Color uncursed items cyan
+MENUCOLOR=" uncursed "=cyan
+
+# Color holy items yellow
+MENUCOLOR=" holy "=yellow
+
+# Color unholy items red
+MENUCOLOR=" unholy "=red
+
+# Alternative blessed marking
+MENUCOLOR=" blessed| B($| )"=green
+
+# Alternative cursed marking
+MENUCOLOR=" cursed| C($| )"=red
+
+# Alternative uncursed marking
+MENUCOLOR=" uncursed| UC?($| )"=cyan
+
+# Enchantment level marking
+MENUCOLOR=" [+-][0-9]"=white
+
+# Holy water highlighting
+MENUCOLOR=" holy water"=cyan
+MENUCOLOR=" blessed clear potion"=cyan
+
+# Unholy water highlighting
+MENUCOLOR=" unholy water"=red
+MENUCOLOR=" cursed clear potion"=red
+
+# ===== IMPORTANT ITEMS HIGHLIGHTING =====
+
+# Highlight wands of wishing
+MENUCOLOR=" wand .* wish"=magenta
+
+# Highlight wands of polymorph
+MENUCOLOR=" wand .* polymorph"=magenta
+
+# Highlight wands of death
+MENUCOLOR=" wand .* death"=magenta
+
+# Highlight bags of holding
+MENUCOLOR=" bag .* holding"=magenta
+
+# Highlight magic lamps
+MENUCOLOR=" magic lamp"=magenta
+MENUCOLOR=" lamp .* magic"=magenta
+
+# Highlight amulets of life saving
+MENUCOLOR=" amulet .* life saving"=magenta
+
+# Highlight amulets of reflection
+MENUCOLOR=" amulet .* reflection"=magenta
+
+# Highlight unicorn horns
+MENUCOLOR=" unicorn horn"=magenta
+
+# Highlight scroll of charging
+MENUCOLOR=" scroll .* charging"=magenta
+
+# Highlight scroll of genocide
+MENUCOLOR=" scroll .* genocide"=magenta
+
+# Highlight scroll of identify
+MENUCOLOR=" scroll .* identify"=magenta
+
+# Highlight scrolls of enchant armor/weapon
+MENUCOLOR=" scroll .* enchant (armor|weapon)"=magenta
+
+# Highlight scrolls of remove curse
+MENUCOLOR=" scroll .* remove curse"=magenta
+
+# ===== FOOD HIGHLIGHTING =====
+
+# Highlight common rations
+MENUCOLOR=" (food |cram |K-|C-)ration"=green
+
+# Highlight lembas wafers
+MENUCOLOR=" lembas wafer"=green
+
+# ===== WARNING COLORS =====
+
+# Warn about bags of tricks (can destroy bag of holding)
+MENUCOLOR=" bag .* tricks"=blue
+
+# Warn about wands of cancellation (can destroy bag of holding)
+MENUCOLOR=" wand .*canc"=blue
+
+# Warn about wands of vanishing (can destroy bag of holding)
+MENUCOLOR=" wand .* vanish"=blue
+
+# Highlight items in use
+MENUCOLOR="\(weapon in .*\)"=white&underline
+MENUCOLOR="\(wielded.*\)"=white&underline
+MENUCOLOR="\(alternate weapon\)"=white&underline
+MENUCOLOR="\(in quiver\)"=white&underline
+MENUCOLOR="\(at the ready\)"=white&underline
+MENUCOLOR="\(being worn\)"=white&underline
+MENUCOLOR="\(embedded in your skin\)"=white&underline
+MENUCOLOR="\(on left .*\)"=white&underline
+MENUCOLOR="\(on right .*\)"=white&underline
+MENUCOLOR="\(in use\)"=white&underline
+
+# Blessed items in use
+MENUCOLOR="blessed .* \(weapon in .*\)"=lightgreen&underline
+MENUCOLOR="blessed .* \(wielded.*\)"=lightgreen&underline
+MENUCOLOR="blessed .* \(alternate weapon\)"=lightgreen&underline
+MENUCOLOR="blessed .* \(in quiver\)"=lightgreen&underline
+MENUCOLOR="blessed .* \(at the ready\)"=lightgreen&underline
+MENUCOLOR="blessed .* \(being worn\)"=lightgreen&underline
+MENUCOLOR="blessed .* \(on left .*\)"=lightgreen&underline
+MENUCOLOR="blessed .* \(on right .*\)"=lightgreen&underline
+
+# Cursed items in use
+MENUCOLOR=" cursed .* \(weapon in .*\)"=orange&underline
+MENUCOLOR=" cursed .* \(wielded.*\)"=orange&underline
+MENUCOLOR=" cursed .* \(alternate weapon\)"=orange&underline
+MENUCOLOR=" cursed .* \(in quiver\)"=orange&underline
+MENUCOLOR=" cursed .* \(at the ready\)"=orange&underline
+MENUCOLOR=" cursed .* \(being worn\)"=red&underline
+MENUCOLOR=" cursed .* \(embedded in your skin\)"=red&underline
+MENUCOLOR=" cursed .* \(on left .*\)"=red&underline
+MENUCOLOR=" cursed .* \(on right .*\)"=red&underline
+
+# Highlight the real Amulet of Yendor
+MENUCOLOR=" Amulet of Yendor named"=magenta
+
+# Spell failure rates
+MENUCOLOR=" 0% "=lightcyan
+MENUCOLOR=" [1-9]% "=lightgreen
+MENUCOLOR=" 1[0-9]% "=green
+MENUCOLOR=" 2[0-4]% "=green
+MENUCOLOR=" 2[5-9]% "=brown
+MENUCOLOR=" [34][0-9]% "=brown
+MENUCOLOR=" [56][0-9]% "=red
+MENUCOLOR=" 7[0-4]% "=red
+MENUCOLOR=" 7[5-9]% "=orange
+MENUCOLOR=" [89][0-9]% "=orange
+MENUCOLOR=" 100% "=orange&underline
