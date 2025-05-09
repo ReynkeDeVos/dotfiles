@@ -241,6 +241,8 @@ fi
 # Ensure 'google-chrome-stable' is in your PATH.
 export BROWSER='google-chrome-stable'
 
+export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
+
 # Optimized compilation code for your specific setup
 # Set nullglob to prevent errors when patterns don't match any files
 setopt nullglob
