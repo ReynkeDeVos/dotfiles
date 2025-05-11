@@ -241,7 +241,20 @@ fi
 # Ensure 'google-chrome-stable' is in your PATH.
 export BROWSER='google-chrome-stable'
 
+# Use Bitwarden as SSH-Manager, although it is still buggy, and 1Password works waaaay better atm
 export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
+
+# ——— Map Alt+Arrow to word-wise movement ———
+
+# backward-word on Alt+Left
+bindkey '\e[1;3D' backward-word
+
+# forward-word on Alt+Right
+bindkey '\e[1;3C' forward-word
+
+# (optionally) scroll through multiline editing on Alt+Up/Down:
+bindkey '\e[1;3A' up-line-or-history
+bindkey '\e[1;3B' down-line-or-history
 
 # Optimized compilation code for your specific setup
 # Set nullglob to prevent errors when patterns don't match any files
