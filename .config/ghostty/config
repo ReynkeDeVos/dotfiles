@@ -44,7 +44,7 @@
 
 gtk-titlebar = false
 # shell-integration = zsh
-# theme = Brogrammer
+#theme = Brogrammer
 theme = dark:"Adwaita Dark",light:"Adwaita"
 # theme = cattpuccin-mocka
 # font-family = "JetBrainsMono Nerd Font Mono"

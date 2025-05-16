@@ -203,7 +203,7 @@ source /usr/share/fzf/completion.zsh
 
 # Configure fzf to use fd and ripgrep for faster searches
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --exclude node_modules'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+# export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git --exclude node_modules'
 
 # Optional: Preview window for fzf (CTRL-T) using bat or head
@@ -237,7 +237,7 @@ if command -v starship &> /dev/null; then
   eval "$(starship init zsh)"
 else
   # Optional: Print a message if starship command is not found
-  # print -P "%F{yellow}Starship command not found. Prompt will not be customized by Starship.%f"
+  print -P "%F{yellow}Starship command not found. Prompt will not be customized by Starship.%f"
 fi
 
 
