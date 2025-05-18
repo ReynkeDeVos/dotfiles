@@ -246,7 +246,8 @@ fi
 export BROWSER='google-chrome-stable'
 
 # Use Bitwarden as SSH-Manager, although it is still buggy, and 1Password works waaaay better atm
-export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
+# export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
+export SSH_AUTH_SOCK=~/.1password/agent.sock
 
 # ——— Map Alt+Arrow to word-wise movement ———
 
