@@ -232,7 +232,6 @@ bindkey "${terminfo[kcud1]}" history-substring-search-down
 # --------------------------------------------
 # Starship init should be one of the last things to ensure it can override
 # other prompt settings if necessary.
-# Ensure Starship is installed (e.g., `sudo pacman -S starship`)
 if command -v starship &> /dev/null; then
   eval "$(starship init zsh)"
 else
