@@ -48,7 +48,7 @@ alias lg='lazygit'
 
 alias p='pnpm' # for the lazy loading to take effect
 
-# Example: Web dev alias
-# alias dev='pnpm run dev'
+alias dev='pnpm run dev'
 
 # Add other aliases you use frequently!
+alias weather='curl wttr.in'

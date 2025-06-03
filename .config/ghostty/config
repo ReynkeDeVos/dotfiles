@@ -64,7 +64,7 @@ keybind = ctrl+shift+r=reload_config
 keybind = ctrl+shift+x=close_surface
 
 # Navigate window splits
-keybind = cmd+shift+h=goto_split:left
-keybind = cmd+shift+j=goto_split:bottom
-keybind = cmd+shift+k=goto_split:top
-keybind = cmd+shift+l=goto_split:right
+keybind = ctrl+shift+h=goto_split:left
+keybind = ctrl+shift+j=goto_split:bottom
+keybind = ctrl+shift+k=goto_split:top
+keybind = ctrl+shift+l=goto_split:right
