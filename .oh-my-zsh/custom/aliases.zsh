@@ -4,7 +4,6 @@
 # Place your personal aliases here.
 # This file is sourced by ~/.zshrc
 
-alias update='sudo pacman -Syu && yay -Sua --noconfirm'
 alias cls='clear'
 alias zshconfig='${EDITOR:-micro} ~/.zshrc' # Uses $EDITOR, defaults to nano if not set
 alias src='source ~/.zshrc && echo "Zsh config reloaded!"' # Added a confirmation message
