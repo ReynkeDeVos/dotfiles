@@ -23,7 +23,7 @@
 # window-padding-x = 2
 
 # # Spacing around the equals sign does not matter.
-# # All of these are identical:
+# All of these are identical:
 # key=value
 # key= value
 # key =value
@@ -58,6 +58,10 @@ font-size = 15
 mouse-hide-while-typing = true
 cursor-style-blink = false
 cursor-style = bar
+# this one is for nvim:
+window-padding-balance = true
+# window-padding-x = 0
+# window-padding-y = 0
 
 keybind = ctrl+shift+p=toggle_tab_overview
 keybind = ctrl+shift+r=reload_config
