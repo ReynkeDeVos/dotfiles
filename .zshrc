@@ -105,6 +105,7 @@ plugins=(
 # --------------------------------------------
 # Set your preferred editor. Used by `zshconfig` alias and other tools.
 export EDITOR='micro' # Or 'nano', 'vim', 'code -w', etc.
+# export SUDO_EDITOR='micro'
 
 # --------------------------------------------
 # ZSH OPTIONS (setopt / unsetopt)
