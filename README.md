@@ -4,21 +4,25 @@ My personal dotfiles managed with GNU Stow.
 
 ## Contents
 
-- `.zshrc` - Zsh shell configuration with Oh My Zsh
-- `.nethackrc` - NetHack configuration
-- `.config/` - Application-specific configurations
-  - `starship.toml` - Starship prompt configuration
-  - `ghostty/` - Ghostty terminal emulator configuration
-  - `mpv/` - MPV media player configuration
-  - `code-flags.conf` - VS Code flags configuration
-  - `chrome-flags.conf` - Chrome/Chromium flags configuration
+- `.zshrc` - Zsh shell
+- `.nethackrc`
+- `.config/`
+  - `cava/` - Audio visualizer
+  - `paru/` - AUR helper
+  - `yay/` - AUR helper
+  - `ghostty/` - Terminal emulator
+  - `mpv/` - Media player
+  - `starship.toml` - Shell prompt
+  - `chrome-flags.conf` - Chrome flags
+  - `code-flags.conf` - VS Code flags
+- `.oh-my-zsh/` - Oh My Zsh framework
 
-## Installation
+## Restore Your Configs
 
 1. Install GNU Stow:
 
    ```bash
-   sudo pacman -S stow
+   yay -S stow
    ```
 
 2. Clone this repository:
@@ -34,12 +38,18 @@ My personal dotfiles managed with GNU Stow.
    stow .
    ```
 
-## Dependencies
+4. Install dependencies:
 
-```bash
-# Oh My Zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+   ```bash
+   # Oh My Zsh
+   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-# Other dependencies
-sudo pacman -S fzf zsh-autopair zsh-autosuggestions zsh-history-substring-search fast-syntax-highlighting starship zoxide bat xcp fd pnpm bitwarden btop lsd nvim lazygit
-```
+   # Other dependencies
+   yay -S fzf zsh-autopair zsh-autosuggestions zsh-history-substring-search fast-syntax-highlighting starship zoxide bat xcp fd pnpm bitwarden btop lsd nvim lazygit
+   ```
+
+## Add a New File
+
+1. Create a folder in your `.dotfiles` directory.
+2. Move your configuration file to the newly created folder.
+3. Run `stow .` inside the `.dotfiles` directory to create the symlink.
