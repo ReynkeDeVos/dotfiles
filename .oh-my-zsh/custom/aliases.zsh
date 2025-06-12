@@ -43,6 +43,7 @@ alias top='btop'
 alias htop='btop'
 
 alias vim='nvim'
+alias v='nvim'
 
 alias lg='lazygit'
 
