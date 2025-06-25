@@ -1,0 +1,36 @@
+[init]
+  defaultBranch = main
+[core]
+  editor = code --wait
+[gpg]
+  format = ssh
+[commit]
+  gpgsign = true
+[pull]
+  rebase = true
+[alias]
+  update = "!f() { \
+    local branch=$(git rev-parse --abbrev-ref HEAD); \
+    local msg=${1:-\"WIP on $branch\"}; \
+    echo \"✅ Adding and committing local changes...\"; \
+    git add .; \
+    if ! git diff --staged --quiet; then \
+      git commit -m \"$msg\" || return; \
+    else \
+      echo \"ℹ️ No local changes to commit. Proceeding to update branch.\"; \
+    fi; \
+    echo \"🔀 Switching to main...\"; \
+    git switch main || return; \
+    echo \"⬇️  Pulling latest main...\"; \
+    git pull --ff-only || return; \
+    echo \"🏠 Switching back to $branch...\"; \
+    git switch \"$branch\" || return; \
+    echo \"🔗 Merging main into $branch...\"; \
+    git merge main --no-ff --no-edit || return; \
+    echo \"🚀 Pushing $branch...\"; \
+    git push origin \"$branch\"; \
+    echo \"✅ Branch '$branch' is updated and pushed.\"; \
+  }; f"
+
+[include]
+  path = ~/.gitconfig.local
