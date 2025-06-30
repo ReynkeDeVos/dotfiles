@@ -11,11 +11,6 @@ else
   compinit -C
 fi
 
-eval "$(zoxide init --cmd cd zsh)"
-# autoload -Uz compinit
-# compinit -i
-
-
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
@@ -75,9 +70,9 @@ export ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
 plugins=(
     git
     archlinux    # Pacman/Yay aliases
-    # aliases     # Common useful aliases (some might be duplicated in your custom aliases.zsh, review as needed)
     history      # Zsh history improvements
-    # colored-man-pages # Colorize man pages
+    colored-man-pages # Colorize man pages
+    # aliases     # Common useful aliases (some might be duplicated in your custom aliases.zsh, review as needed)
     # gh           # For GitHub CLI completions and aliases (needs gh installed)
     # 1password    # For 1Password CLI completions (needs 1Password CLI installed)
     # alias-finder # Helps find existing aliases for commands
@@ -149,15 +144,6 @@ fi
 # --------------------------------------------
 # LAZY LOADING FUNCTIONS
 # --------------------------------------------
-# Lazy load colored man pages
-man() {
-  if ! type "colored" > /dev/null; then
-    # Load the colored-man-pages plugin
-    source $ZSH/plugins/colored-man-pages/colored-man-pages.plugin.zsh
-  fi
-  command man "$@"
-}
-
 # Lazy load GitHub CLI
 gh() {
   unfunction gh
@@ -214,7 +200,7 @@ export FZF_CTRL_T_OPTS="--preview 'bat --color=always --plain {} || head -n 200 
 # ZOXIDE (Intelligent cd)
 # --------------------------------------------
 # Ensure zoxide is installed (e.g., `yay -S zoxide`)
-eval "$(zoxide init zsh)"
+eval "$(zoxide init --cmd cd zsh)"
 
 # --------------------------------------------
 # HISTORY-SUBSTRING-SEARCH KEYBINDINGS
@@ -261,56 +247,14 @@ bindkey '\e[1;3C' forward-word
 bindkey '\e[1;3A' up-line-or-history
 bindkey '\e[1;3B' down-line-or-history
 
-# Optimized compilation code for your specific setup
-# Set nullglob to prevent errors when patterns don't match any files
-setopt nullglob
 
-# Only compile main plugin files and avoid test data
-for f in $ZSH/lib/*.zsh; do
-  if [[ -f $f && ! $f =~ "test" && ( ! -e "${f}.zwc" || "$f" -nt "${f}.zwc" ) ]]; then
-    zcompile "$f"
-  fi
-done
+# pnpm
+export PNPM_HOME="/home/kawa/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
 
-# Only compile the main Oh My Zsh file
-if [[ -f $ZSH/oh-my-zsh.sh && ( ! -e "$ZSH/oh-my-zsh.sh.zwc" || "$ZSH/oh-my-zsh.sh" -nt "$ZSH/oh-my-zsh.sh.zwc" ) ]]; then
-  zcompile "$ZSH/oh-my-zsh.sh"
-fi
-
-# Compile only your active plugins
-active_plugins=(
-  "git"
-  "archlinux"
-  "history"
-  "zsh-autopair"
-  "history-substring-search"
-  "zsh-autosuggestions"
-  "fast-syntax-highlighting"
-)
-
-for plugin in ${active_plugins[@]}; do
-  plugin_file="$ZSH/plugins/$plugin/$plugin.plugin.zsh"
-  if [[ -f $plugin_file && ( ! -e "${plugin_file}.zwc" || "$plugin_file" -nt "${plugin_file}.zwc" ) ]]; then
-    zcompile "$plugin_file"
-  fi
-  
-  # Check custom plugins directory
-  custom_plugin_file="$ZSH_CUSTOM/plugins/$plugin/$plugin.plugin.zsh"
-  if [[ -f $custom_plugin_file && ( ! -e "${custom_plugin_file}.zwc" || "$custom_plugin_file" -nt "${custom_plugin_file}.zwc" ) ]]; then
-    zcompile "$custom_plugin_file"
-  fi
-done
-
-# Also compile custom files
-if [[ -f "$ZSH_CUSTOM/aliases.zsh" && ( ! -e "$ZSH_CUSTOM/aliases.zsh.zwc" || "$ZSH_CUSTOM/aliases.zsh" -nt "$ZSH_CUSTOM/aliases.zsh.zwc" ) ]]; then
-  zcompile "$ZSH_CUSTOM/aliases.zsh"
-fi
-
-if [[ -f "$ZSH_CUSTOM/custom-update.zsh" && ( ! -e "$ZSH_CUSTOM/custom-update.zsh.zwc" || "$ZSH_CUSTOM/custom-update.zsh" -nt "$ZSH_CUSTOM/custom-update.zsh.zwc" ) ]]; then
-  zcompile "$ZSH_CUSTOM/custom-update.zsh"
-fi
-
-# Restore the original state
-unsetopt nullglob
 
 # zprof
