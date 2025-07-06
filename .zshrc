@@ -146,3 +146,10 @@ bindkey '\e[1;3A' up-line-or-history
 bindkey '\e[1;3B' down-line-or-history
 
 # zprof
+# pnpm
+export PNPM_HOME="/home/kawa/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
