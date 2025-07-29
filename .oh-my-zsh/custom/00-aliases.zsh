@@ -3,6 +3,8 @@
 # --------------------------------------------
 # This file is sourced automatically by Oh My Zsh.
 
+# echo "✅ alias file loaded"
+
 alias cls='clear'
 alias zshconfig='${EDITOR:-micro} ~/.zshrc'
 alias src='source ~/.zshrc && echo "Zsh config reloaded!"'
@@ -33,8 +35,8 @@ alias v='nvim'
 
 alias lg='lazygit'
 
-alias p='pnpm' # for the lazy loading to take effect
+alias p='pnpm'
 
-alias dev='pnpm run dev'
+alias idev='pnpm install && pnpm run dev'
 
 alias weather='curl wttr.in'
