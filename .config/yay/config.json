@@ -10,5 +10,5 @@
   "answeredit": "None",
   "sudoloop": true,
   "removemake": "yes",
-  "cleanAfter": true,
+  "cleanAfter": true
 }
