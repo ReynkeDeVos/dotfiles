@@ -11,5 +11,4 @@
   "sudoloop": true,
   "removemake": "yes",
   "cleanAfter": true,
-  "timeupdate": false
 }
