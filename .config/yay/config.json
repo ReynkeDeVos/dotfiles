@@ -1,3 +1,15 @@
 {
-  "sudoloop": true
+  "doubleconfirm": false,
+  "upgrademenu": false,
+  "cleanmenu": false,
+  "diffmenu": false,
+  "editmenu": false,
+  "answerupgrade": "All",
+  "answerclean": "All",
+  "answerdiff": "None",
+  "answeredit": "None",
+  "sudoloop": true,
+  "removemake": "yes",
+  "cleanAfter": true,
+  "timeupdate": false
 }
