@@ -40,12 +40,12 @@ plugins=(
     # Custom plugins (cloned into $ZSH_CUSTOM/plugins)
     # pnpm         # For pnpm completions and aliases.
     zsh-autopair
+    # autoupdate # upgrades custom installed plugins. Maybe switch to pacman installs?
+    zsh-autosuggestions   # more like fish: one gray inline suggestion
     history-substring-search
     # zsh-autocomplete   # displays all options / history - loads super slow
-    zsh-autosuggestions   # more like fish: one gray inline suggestion
-    # autoupdate # upgrades custom installed plugins. Maybe switch to pacman installs?
-    # zsh-syntax-highlighting # IMPORTANT: This should generally be the LAST plugin in the list
     fast-syntax-highlighting
+    # zsh-syntax-highlighting # IMPORTANT: This should generally be the LAST plugin in the list
 )
 
 # --------------------------------------------
