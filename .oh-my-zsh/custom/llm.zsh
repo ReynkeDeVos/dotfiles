@@ -11,6 +11,7 @@ function LLM() {
   setopt localoptions no_aliases
 
   local -a options cmds
+  local selected_cmd
 
   # Helper: add first available command under a display label
   add_cmd() {
@@ -36,21 +37,49 @@ function LLM() {
     return 127
   fi
 
+  # Handle direct argument if provided
+  if [[ -n "$1" ]]; then
+    case "$1" in
+      claude)
+        selected_cmd="claude"
+        ;;
+      gemini)
+        selected_cmd="gemini"
+        ;;
+      chatgpt|codex)
+        selected_cmd="codex"
+        ;;
+    esac
+    if [[ -n "$selected_cmd" ]] && command -v "$selected_cmd" >/dev/null 2>&1; then
+      shift # remove the llm name from arguments
+      "$selected_cmd" "$@"
+      return 0
+    fi
+  fi
+
   # If only one is available, launch it directly
   if (( ${#options[@]} == 1 )); then
-    exec "${cmds[1]}" "$@"
+    "${cmds[1]}" "$@"
   fi
 
   echo "Select LLM CLI to run:"
-  local PS3="Enter choice [1-$(( ${#options[@]} + 1 ))]: "
-  select opt in "${options[@]}" "Cancel"; do
-    case "$REPLY" in
-      ''|*[!0-9]*) echo "Invalid selection."; continue ;;
-    esac
-    if (( REPLY >= 1 && REPLY <= ${#options[@]} )); then
-      exec "${cmds[$REPLY]}" "$@"
-    elif (( REPLY == ${#options[@]} + 1 )); then
-      return 0
+  local i=1
+  for opt in "${options[@]}"; do
+    printf "%d) %s  " "$i" "$opt"
+    ((i++))
+  done
+  printf "%d) %s\n" "$i" "Cancel"
+
+  local choice
+  while true; do
+    read -k choice 
+    echo
+
+    if [[ "$choice" -ge 1 && "$choice" -le ${#options[@]} ]]; then
+      "${cmds[$choice]}" "$@"
+      break
+    elif [[ "$choice" -eq $i ]]; then
+      break
     else
       echo "Invalid selection."
     fi
