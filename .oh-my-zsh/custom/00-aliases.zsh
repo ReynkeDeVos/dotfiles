@@ -36,7 +36,11 @@ alias v='nvim'
 alias lg='lazygit'
 
 alias p='pnpm'
-
 alias idev='pnpm install && pnpm run dev'
 
+alias grep='rg --hidden --smart-case --follow'
+#(includes ignored files)
+alias grepi='rg --hidden --smart-case --follow -uu' 
+
 alias weather='curl wttr.in'
+alias coffee='ssh terminal.shop'
