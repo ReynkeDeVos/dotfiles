@@ -100,6 +100,9 @@ pnpm() {
   pnpm "$@"
 }
 
+source /home/kawa/.config/broot/launcher/bash/br
+
+
 # --------------------------------------------
 # FZF (Fuzzy Finder)
 # --------------------------------------------

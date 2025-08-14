@@ -42,5 +42,9 @@ alias grep='rg --hidden --smart-case --follow'
 #(includes ignored files)
 alias grepi='rg --hidden --smart-case --follow -uu' 
 
+alias cp='xcp'
+alias rm='trash -v'
+alias ping='gping'
+
 alias weather='curl wttr.in'
 alias coffee='ssh terminal.shop'

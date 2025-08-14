@@ -30,7 +30,8 @@ This repository contains my dotfiles. These configurations are for my personal d
    # Install all required packages
    yay -S fzf zsh-autopair zsh-autosuggestions zsh-history-substring-search \
           fast-syntax-highlighting starship zoxide bat ripgrep xcp fd pnpm \
-          1password btop lsd nvim lazygit cava ghostty mpv
+          1password btop lsd nvim lazygit cava ghostty mpv trash-cli gdu gping \
+          broot
    ```
 
 6. **Restart your shell or source the configuration:**
