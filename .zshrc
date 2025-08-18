@@ -156,4 +156,7 @@ case ":$PATH:" in
 esac
 # pnpm end
 
+# Boot.dev CLI
+export PATH=$PATH:$HOME/go/bin
+
 # zprof
