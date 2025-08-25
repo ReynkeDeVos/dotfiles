@@ -3,12 +3,15 @@
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+
 # Faster loading by only checking completion dump once a day
+# Completion init (safer & per-host)
 autoload -Uz compinit
-if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
-  compinit
+ZCOMP_CACHEDUMP="${ZDOTDIR:-$HOME}/.zcompdump-${HOST}"
+if [[ -n ${ZCOMP_CACHEDUMP}(#qN.mh+24) ]]; then
+  compinit -i -d "$ZCOMP_CACHEDUMP"
 else
-  compinit -C
+  compinit -i -C -d "$ZCOMP_CACHEDUMP"
 fi
 
 # -------------------
@@ -36,13 +39,13 @@ plugins=(
     # alias-finder # Helps find existing aliases for commands
     # fzf        # Basic fzf plugin from Oh My Zsh (can be used alongside manual setup for extra aliases if desired)
     # sudo         # Press Esc twice to prepend sudo
-    
-    # Custom plugins (cloned into $ZSH_CUSTOM/plugins)
     # pnpm         # For pnpm completions and aliases.
+
+    # Custom plugins (cloned into $ZSH_CUSTOM/plugins)
     zsh-autopair
     # autoupdate # upgrades custom installed plugins. Maybe switch to pacman installs?
-    zsh-autosuggestions   # more like fish: one gray inline suggestion
     history-substring-search
+    zsh-autosuggestions   # more like fish: one gray inline suggestion
     # zsh-autocomplete   # displays all options / history - loads super slow
     fast-syntax-highlighting
     # zsh-syntax-highlighting # IMPORTANT: This should generally be the LAST plugin in the list
@@ -84,23 +87,70 @@ export SAVEHIST=10000
 source $ZSH/oh-my-zsh.sh
 
 # --------------------------------------------
-# LAZY LOADING FUNCTIONS
+# LAZY LOADING FUNCTIONS (guarded)
 # --------------------------------------------
 # Lazy load GitHub CLI
 gh() {
+  if ! command -v gh >/dev/null 2>&1; then
+    print -P "%F{yellow}GitHub CLI (gh) not installed.%f"
+    return 127
+  fi
   unfunction gh
   eval "$(gh completion -s zsh)"
-  gh "$@"
+  command gh "$@"
 }
 
 # Lazy load pnpm
 pnpm() {
-  unfunction pnpm
-  source $ZSH_CUSTOM/plugins/pnpm/pnpm.plugin.zsh
-  pnpm "$@"
+  if [[ -r "$ZSH_CUSTOM/plugins/pnpm/pnpm.plugin.zsh" ]]; then
+    unfunction pnpm
+    source "$ZSH_CUSTOM/plugins/pnpm/pnpm.plugin.zsh"
+    command pnpm "$@"
+  else
+    if ! command -v pnpm >/dev/null 2>&1; then
+      print -P "%F{yellow}pnpm not installed and pnpm plugin not found.%f"
+      return 127
+    fi
+    unfunction pnpm
+    command pnpm "$@"
+  fi
 }
 
-source /home/kawa/.config/broot/launcher/bash/br
+
+# --------------------------------------------
+# COMPLETION HELPERS (replace custom _files)
+# --------------------------------------------
+# Generic helper: try common "print zsh completions" forms and eval the output.
+__try_eval_zsh_completion() {
+  local bin="$1" out form
+  [[ -z "$bin" || ! $(command -v "$bin") ]] && return 1
+  # If distro already installed a completion file, nothing to do.
+  [[ -e "/usr/share/zsh/site-functions/_${bin}" ]] && return 0
+  local -a forms=(
+    "$bin completion zsh"
+    "$bin completions zsh"
+    "$bin --completion zsh"
+    "$bin --completions zsh"
+    "$bin generate-completions zsh"
+    "$bin gen-completions zsh"
+  )
+  for form in "${forms[@]}"; do
+    if out="$(eval "$form" 2>/dev/null)"; then
+      eval "$out"
+      return 0
+    fi
+  done
+  return 1
+}
+
+# pnpm: use built-in generator (no custom _pnpm file needed)
+if command -v pnpm >/dev/null 2>&1; then
+  eval "$(pnpm completion zsh)"
+fi
+
+# spotify_player: try to self-generate if no system completion exists
+__try_eval_zsh_completion spotify_player
+
 
 
 # --------------------------------------------
@@ -112,6 +162,8 @@ source /usr/share/fzf/completion.zsh
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --exclude node_modules'
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git --exclude node_modules'
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --plain {} || head -n 200 {}'"
+# Optional nicer UI defaults
+export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:-} --height=40% --layout=reverse --info=inline"
 
 # --------------------------------------------
 # ZOXIDE (Intelligent cd)
