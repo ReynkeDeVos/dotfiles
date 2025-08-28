@@ -1,29 +1,74 @@
+# Profile startup (run `zprof` after a fresh shell to see breakdown)
 # zmodload zsh/zprof
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+export ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
 
-
-# Faster loading by only checking completion dump once a day
-# Completion init (safer & per-host)
+# -------------------
+# CACHED COMPINIT (run before OMZ; ask OMZ to skip its own)
+# -------------------
+export skip_global_compinit=1
+export ZSH_DISABLE_COMPFIX="true"   # we'll fix perms once; skip prompts
 autoload -Uz compinit
-ZCOMP_CACHEDUMP="${ZDOTDIR:-$HOME}/.zcompdump-${HOST}"
-if [[ -n ${ZCOMP_CACHEDUMP}(#qN.mh+24) ]]; then
-  compinit -i -d "$ZCOMP_CACHEDUMP"
+# Rebuild if older than 1 day; else trust cached dump
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qNmh+1) ]]; then
+  compinit -i
 else
-  compinit -i -C -d "$ZCOMP_CACHEDUMP"
+  compinit -C -i
 fi
+
+# -------------------
+# LAZY STATIC COMPLETIONS (pure zsh)
+# -------------------
+# Store generated completion files here (first <Tab> per tool).
+: ${ZSH_STATIC_COMP_DIR:="$HOME/.zsh/completions"}
+fpath=($ZSH_STATIC_COMP_DIR $fpath)
+
+# Map commands -> generator command. ONLY add tools NOT already shipped in
+# /usr/share/zsh/site-functions/_* or /usr/share/zsh/functions/Completion/*/_*
+typeset -gA LAZY_COMP_GEN=(
+  pnpm      'pnpm completion zsh'
+  viu-media 'viu-media completions --zsh'
+)
+
+# Generate on first <Tab>, then reinit completion.
+_lazy_static_completion() {
+  local tool=$1
+  local file=$ZSH_STATIC_COMP_DIR/_$tool
+
+  if [[ ! -e $file ]]; then
+    mkdir -p -- $ZSH_STATIC_COMP_DIR
+    if [[ -n ${LAZY_COMP_GEN[$tool]} ]]; then
+      eval "${LAZY_COMP_GEN[$tool]} >| $file" 2>/dev/null || { rm -f -- "$file"; return 1; }
+      # Refresh completion so the new file is picked up
+      rm -f -- ${ZDOTDIR:-$HOME}/.zcompdump(N) ${ZDOTDIR:-$HOME}/.zcompdump.zwc(N)
+      autoload -Uz compinit
+      compinit -i
+    else
+      return 1
+    fi
+  fi
+
+  if (( $+functions[_$tool] )); then
+    "_$tool"
+  else
+    _files
+  fi
+}
+
+# Helper to bind the lazy completion shim
+lazy_compdef() { for cmd in "$@"; do compdef "_lazy_static_completion $cmd" "$cmd"; done }
 
 # -------------------
 # OH MY ZSH SETTINGS
 # -------------------
 ZSH_THEME=""
-
-# Note: Oh My Zsh updates are handled by the custom script in ~/.oh-my-zsh/custom/
-DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Oh My Zsh custom folder
-export ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
+# Keep OMZ fast & quiet
+export DISABLE_AUTO_UPDATE="true"
+export UPDATE_ZSH_DAYS=30
+# export ZSH_DISABLE_COMPFIX="true"
+export DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # -------------------
 # PLUGINS
@@ -42,14 +87,52 @@ plugins=(
     # pnpm         # For pnpm completions and aliases.
 
     # Custom plugins (cloned into $ZSH_CUSTOM/plugins)
-    zsh-autopair
+    # zsh-autopair    # defer it!
     # autoupdate # upgrades custom installed plugins. Maybe switch to pacman installs?
     history-substring-search
     zsh-autosuggestions   # more like fish: one gray inline suggestion
     # zsh-autocomplete   # displays all options / history - loads super slow
-    fast-syntax-highlighting
+    # fast-syntax-highlighting
     # zsh-syntax-highlighting # IMPORTANT: This should generally be the LAST plugin in the list
 )
+
+# -------------------
+# LOAD OH MY ZSH (compinit already done)
+# -------------------
+source "$ZSH/oh-my-zsh.sh"
+
+# -------------------
+# REGISTER LAZY COMPLETIONS (AFTER compinit/OMZ)
+# ONLY include commands you listed in LAZY_COMP_GEN
+# -------------------
+lazy_compdef pnpm viu-media
+
+# -------------------
+# DEFER HEAVY PLUGINS UNTIL AFTER FIRST PROMPT
+# (pure zsh; no external helper)
+# -------------------
+autoload -Uz add-zsh-hook
+
+# fast-syntax-highlighting (your install path):
+# We defer it because its widget-binding shows as _zsh_highlight_bind_widgets in zprof.
+__fastsh_loaded=0
+__fastsh_boot() {
+  (( __fastsh_loaded )) && return
+  __fastsh_loaded=1
+  # Source your existing plugin (adjust if you move it)
+  local fastsh="$ZSH_CUSTOM/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+  [[ -r $fastsh ]] && source "$fastsh"
+}
+add-zsh-hook precmd __fastsh_boot
+
+# zsh-autopair — also defer to after first prompt
+__autopair_loaded=0
+__autopair_boot() {
+  (( __autopair_loaded )) && return
+  __autopair_loaded=1
+  typeset -f autopair-init >/dev/null && autopair-init
+}
+add-zsh-hook precmd __autopair_boot
 
 # --------------------------------------------
 # PREFERRED EDITOR
@@ -62,15 +145,11 @@ export EDITOR='micro'
 # ZSH OPTIONS (setopt / unsetopt)
 # --------------------------------------------
 # For a comprehensive list: `man zshoptions`
-setopt AUTO_CD              # Auto cd if only a directory is given
-setopt AUTO_PUSHD           # Push directory onto stack after cd
-setopt PUSHD_IGNORE_DUPS    # Don't push duplicate directories
-setopt CORRECT              # Auto correct mistakes
-setopt HIST_IGNORE_ALL_DUPS # If you want to remove all duplicates from history
+setopt AUTO_CD AUTO_PUSHD PUSHD_IGNORE_DUPS               # Auto cd if only a directory is given # Push directory onto stack after cd # Don't push duplicate directories
+setopt CORRECT              # Auto correct mistakes 
+setopt HIST_IGNORE_ALL_DUPS HIST_REDUCE_BLANKS # If you want to remove all duplicates from history  # Remove superfluous blanks from history items
 # setopt HIST_IGNORE_DUPS     # Do not write events to history that are duplicates of the previous event
-setopt HIST_REDUCE_BLANKS   # Remove superfluous blanks from history items
-setopt INC_APPEND_HISTORY   # Write history incrementally, don't wait until shell exit
-setopt SHARE_HISTORY        # Share history between all sessions (useful with INC_APPEND_HISTORY)
+setopt INC_APPEND_HISTORY SHARE_HISTORY  # Write history incrementally, don't wait until shell exit   # Share history between all sessions (useful with INC_APPEND_HISTORY)
 setopt EXTENDED_GLOB        # Use extended globbing features
 
 # --------------------------------------------
@@ -81,94 +160,25 @@ export HISTSIZE=10000
 export SAVEHIST=10000
 
 # --------------------------------------------
-# LOAD OH MY ZSH & CUSTOM CONFIGS
-# --------------------------------------------
-# This loads Oh My Zsh and automatically sources all .zsh files in $ZSH_CUSTOM
-source $ZSH/oh-my-zsh.sh
-
-# --------------------------------------------
-# LAZY LOADING FUNCTIONS (guarded)
-# --------------------------------------------
-# Lazy load GitHub CLI
-gh() {
-  if ! command -v gh >/dev/null 2>&1; then
-    print -P "%F{yellow}GitHub CLI (gh) not installed.%f"
-    return 127
-  fi
-  unfunction gh
-  eval "$(gh completion -s zsh)"
-  command gh "$@"
-}
-
-# Lazy load pnpm
-pnpm() {
-  if [[ -r "$ZSH_CUSTOM/plugins/pnpm/pnpm.plugin.zsh" ]]; then
-    unfunction pnpm
-    source "$ZSH_CUSTOM/plugins/pnpm/pnpm.plugin.zsh"
-    command pnpm "$@"
-  else
-    if ! command -v pnpm >/dev/null 2>&1; then
-      print -P "%F{yellow}pnpm not installed and pnpm plugin not found.%f"
-      return 127
-    fi
-    unfunction pnpm
-    command pnpm "$@"
-  fi
-}
-
-
-# --------------------------------------------
-# COMPLETION HELPERS (replace custom _files)
-# --------------------------------------------
-# Generic helper: try common "print zsh completions" forms and eval the output.
-__try_eval_zsh_completion() {
-  local bin="$1" out form
-  [[ -z "$bin" || ! $(command -v "$bin") ]] && return 1
-  # If distro already installed a completion file, nothing to do.
-  [[ -e "/usr/share/zsh/site-functions/_${bin}" ]] && return 0
-  local -a forms=(
-    "$bin completion zsh"
-    "$bin completions zsh"
-    "$bin --completion zsh"
-    "$bin --completions zsh"
-    "$bin generate-completions zsh"
-    "$bin gen-completions zsh"
-  )
-  for form in "${forms[@]}"; do
-    if out="$(eval "$form" 2>/dev/null)"; then
-      eval "$out"
-      return 0
-    fi
-  done
-  return 1
-}
-
-# pnpm: use built-in generator (no custom _pnpm file needed)
-if command -v pnpm >/dev/null 2>&1; then
-  eval "$(pnpm completion zsh)"
-fi
-
-# spotify_player: try to self-generate if no system completion exists
-__try_eval_zsh_completion spotify_player
-
-
-
-# --------------------------------------------
 # FZF (Fuzzy Finder)
 # --------------------------------------------
-source /usr/share/fzf/key-bindings.zsh
-source /usr/share/fzf/completion.zsh
-
+if [[ -r /usr/share/fzf/key-bindings.zsh ]]; then
+  source /usr/share/fzf/key-bindings.zsh
+fi
+if [[ -r /usr/share/fzf/completion.zsh ]]; then
+  source /usr/share/fzf/completion.zsh
+fi
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --exclude node_modules'
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git --exclude node_modules'
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --plain {} || head -n 200 {}'"
-# Optional nicer UI defaults
 export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:-} --height=40% --layout=reverse --info=inline"
 
 # --------------------------------------------
 # ZOXIDE (Intelligent cd)
 # --------------------------------------------
-eval "$(zoxide init --cmd cd zsh)"
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init --cmd cd zsh)"
+fi
 
 # --------------------------------------------
 # HISTORY-SUBSTRING-SEARCH KEYBINDINGS
@@ -181,17 +191,26 @@ bindkey "${terminfo[kcud1]}" history-substring-search-down
 # --------------------------------------------
 if command -v starship &> /dev/null; then
   eval "$(starship init zsh)"
-else
-  print -P "%F{yellow}Starship command not found.%f"
 fi
 
-# Set your preferred browser for command-line tools.
-export BROWSER='google-chrome-stable'
+# -------------------
+# ENV/PATH
+# -------------------
+export BROWSER='google-chrome-stable' # Set your preferred browser for command-line tools.
+export SSH_AUTH_SOCK=~/.1password/agent.sock # Use 1Password as the SSH Agent
 
-# Use 1Password as the SSH Agent
-export SSH_AUTH_SOCK=~/.1password/agent.sock
+# pnpm
+export PNPM_HOME="$HOME/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# Boot.dev CLI
+export PATH="$PATH:$HOME/go/bin"
 
-# ——— Map Alt+Arrow to word-wise movement ———
+# -------------------
+# Keybindings: Alt+Arrows
+# -------------------
 # backward-word on Alt+Left
 bindkey '\e[1;3D' backward-word
 # forward-word on Alt+Right
@@ -200,15 +219,11 @@ bindkey '\e[1;3C' forward-word
 bindkey '\e[1;3A' up-line-or-history
 bindkey '\e[1;3B' down-line-or-history
 
-# pnpm
-export PNPM_HOME="/home/kawa/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
 
-# Boot.dev CLI
-export PATH=$PATH:$HOME/go/bin
+# -------------------
+# One-time: fix insecure paths so compaudit stops churning
+# Run this once manually, then keep commented:
+# compaudit | xargs -r -I{} chmod -R go-w '{}'
+
 
 # zprof
