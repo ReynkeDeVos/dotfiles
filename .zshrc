@@ -104,11 +104,22 @@ source "$ZSH/oh-my-zsh.sh"
 # -------------------
 # Carapace completion (https://github.com/rsteube/carapace)
 # Load after Oh My Zsh so OMZ has finished initializing.
-# Optional: enable bridges for other shells/features (adjust to taste)
 export CARAPACE_BRIDGES='zsh'
 
 # Cosmetic completion message (optional)
-zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+# zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m%F{244}⟫'
+# grey colours:
+zstyle ':completion:*' format '%K{244}%F{0} ⟫ %d %f%k'
+# pastel colours:
+# zstyle ':completion:*' format '%K{147}%F{0} ⟫ %d %f%k'
+# Keep results relevant (files last unless explicitly completing paths)
+zstyle ':completion:*' group-order \
+  'arguments' \
+  'options' \
+  'main commands' 'alias commands' 'external commands' \
+  'values' \
+  'paths' 'files' 'directories' \
+  'parameters' 'aliases' 'functions' 'builtins' 'reserved-words' 'commands'
 
 # Register Carapace completers for zsh
 # keep CARAPACE_BRIDGES above this line so bridges are applied
