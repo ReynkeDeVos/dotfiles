@@ -18,47 +18,47 @@ else
   compinit -C -i
 fi
 
-# -------------------
-# LAZY STATIC COMPLETIONS (pure zsh)
-# -------------------
-# Store generated completion files here (first <Tab> per tool).
-: ${ZSH_STATIC_COMP_DIR:="$HOME/.zsh/completions"}
-fpath=($ZSH_STATIC_COMP_DIR $fpath)
+# # -------------------
+# # LAZY STATIC COMPLETIONS (pure zsh)
+# # -------------------
+# # Store generated completion files here (first <Tab> per tool).
+# : ${ZSH_STATIC_COMP_DIR:="$HOME/.zsh/completions"}
+# fpath=($ZSH_STATIC_COMP_DIR $fpath)
 
 # Map commands -> generator command. ONLY add tools NOT already shipped in
 # /usr/share/zsh/site-functions/_* or /usr/share/zsh/functions/Completion/*/_*
-typeset -gA LAZY_COMP_GEN=(
-  pnpm      'pnpm completion zsh'
-  viu-media 'viu-media completions --zsh'
-)
+# typeset -gA LAZY_COMP_GEN=(
+#   pnpm      'pnpm completion zsh'
+#   viu-media 'viu-media completions --zsh'
+# )
 
-# Generate on first <Tab>, then reinit completion.
-_lazy_static_completion() {
-  local tool=$1
-  local file=$ZSH_STATIC_COMP_DIR/_$tool
+# # Generate on first <Tab>, then reinit completion.
+# _lazy_static_completion() {
+#   local tool=$1
+#   local file=$ZSH_STATIC_COMP_DIR/_$tool
 
-  if [[ ! -e $file ]]; then
-    mkdir -p -- $ZSH_STATIC_COMP_DIR
-    if [[ -n ${LAZY_COMP_GEN[$tool]} ]]; then
-      eval "${LAZY_COMP_GEN[$tool]} >| $file" 2>/dev/null || { rm -f -- "$file"; return 1; }
-      # Refresh completion so the new file is picked up
-      rm -f -- ${ZDOTDIR:-$HOME}/.zcompdump(N) ${ZDOTDIR:-$HOME}/.zcompdump.zwc(N)
-      autoload -Uz compinit
-      compinit -i
-    else
-      return 1
-    fi
-  fi
+#   if [[ ! -e $file ]]; then
+#     mkdir -p -- $ZSH_STATIC_COMP_DIR
+#     if [[ -n ${LAZY_COMP_GEN[$tool]} ]]; then
+#       eval "${LAZY_COMP_GEN[$tool]} >| $file" 2>/dev/null || { rm -f -- "$file"; return 1; }
+#       # Refresh completion so the new file is picked up
+#       rm -f -- ${ZDOTDIR:-$HOME}/.zcompdump(N) ${ZDOTDIR:-$HOME}/.zcompdump.zwc(N)
+#       autoload -Uz compinit
+#       compinit -i
+#     else
+#       return 1
+#     fi
+#   fi
 
-  if (( $+functions[_$tool] )); then
-    "_$tool"
-  else
-    _files
-  fi
-}
+#   if (( $+functions[_$tool] )); then
+#     "_$tool"
+#   else
+#     _files
+#   fi
+# }
 
-# Helper to bind the lazy completion shim
-lazy_compdef() { for cmd in "$@"; do compdef "_lazy_static_completion $cmd" "$cmd"; done }
+# # Helper to bind the lazy completion shim
+# lazy_compdef() { for cmd in "$@"; do compdef "_lazy_static_completion $cmd" "$cmd"; done }
 
 # -------------------
 # OH MY ZSH SETTINGS
@@ -74,8 +74,8 @@ export DISABLE_UNTRACKED_FILES_DIRTY="true"
 # PLUGINS
 # -------------------
 plugins=(
-    git
-    archlinux    # Pacman/Yay aliases
+    # git
+    # archlinux    # Pacman/Yay aliases
     history      # Zsh history improvements
     colored-man-pages # Colorize man pages
     # aliases     # Common useful aliases (some might be duplicated in your custom aliases.zsh, review as needed)
@@ -87,12 +87,12 @@ plugins=(
     # pnpm         # For pnpm completions and aliases.
 
     # Custom plugins (cloned into $ZSH_CUSTOM/plugins)
-    # zsh-autopair    # defer it!
+    zsh-autopair    
     # autoupdate # upgrades custom installed plugins. Maybe switch to pacman installs?
     history-substring-search
     zsh-autosuggestions   # more like fish: one gray inline suggestion
     # zsh-autocomplete   # displays all options / history - loads super slow
-    # fast-syntax-highlighting
+    fast-syntax-highlighting
     # zsh-syntax-highlighting # IMPORTANT: This should generally be the LAST plugin in the list
 )
 
@@ -102,37 +102,50 @@ plugins=(
 source "$ZSH/oh-my-zsh.sh"
 
 # -------------------
+# Carapace completion (https://github.com/rsteube/carapace)
+# Load after Oh My Zsh so OMZ has finished initializing.
+# Optional: enable bridges for other shells/features (adjust to taste)
+export CARAPACE_BRIDGES='zsh'
+
+# Cosmetic completion message (optional)
+zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+
+# Register Carapace completers for zsh
+# keep CARAPACE_BRIDGES above this line so bridges are applied
+source <(carapace _carapace)
+
+# -------------------
 # REGISTER LAZY COMPLETIONS (AFTER compinit/OMZ)
 # ONLY include commands you listed in LAZY_COMP_GEN
 # -------------------
-lazy_compdef pnpm viu-media
+# lazy_compdef pnpm viu-media
 
-# -------------------
-# DEFER HEAVY PLUGINS UNTIL AFTER FIRST PROMPT
-# (pure zsh; no external helper)
-# -------------------
-autoload -Uz add-zsh-hook
+# # -------------------
+# # DEFER HEAVY PLUGINS UNTIL AFTER FIRST PROMPT
+# # (pure zsh; no external helper)
+# # -------------------
+# autoload -Uz add-zsh-hook
 
-# fast-syntax-highlighting (your install path):
-# We defer it because its widget-binding shows as _zsh_highlight_bind_widgets in zprof.
-__fastsh_loaded=0
-__fastsh_boot() {
-  (( __fastsh_loaded )) && return
-  __fastsh_loaded=1
-  # Source your existing plugin (adjust if you move it)
-  local fastsh="$ZSH_CUSTOM/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
-  [[ -r $fastsh ]] && source "$fastsh"
-}
-add-zsh-hook precmd __fastsh_boot
+# # fast-syntax-highlighting (your install path):
+# # We defer it because its widget-binding shows as _zsh_highlight_bind_widgets in zprof.
+# __fastsh_loaded=0
+# __fastsh_boot() {
+#   (( __fastsh_loaded )) && return
+#   __fastsh_loaded=1
+#   # Source your existing plugin (adjust if you move it)
+#   local fastsh="$ZSH_CUSTOM/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+#   [[ -r $fastsh ]] && source "$fastsh"
+# }
+# add-zsh-hook precmd __fastsh_boot
 
-# zsh-autopair — also defer to after first prompt
-__autopair_loaded=0
-__autopair_boot() {
-  (( __autopair_loaded )) && return
-  __autopair_loaded=1
-  typeset -f autopair-init >/dev/null && autopair-init
-}
-add-zsh-hook precmd __autopair_boot
+# # zsh-autopair — also defer to after first prompt
+# __autopair_loaded=0
+# __autopair_boot() {
+#   (( __autopair_loaded )) && return
+#   __autopair_loaded=1
+#   typeset -f autopair-init >/dev/null && autopair-init
+# }
+# add-zsh-hook precmd __autopair_boot
 
 # --------------------------------------------
 # PREFERRED EDITOR
