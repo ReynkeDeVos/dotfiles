@@ -46,5 +46,9 @@ alias cp='xcp'
 alias rm='trash -v'
 alias ping='gping'
 
+alias oc='opencode'
+
 alias weather='curl wttr.in'
 alias coffee='ssh terminal.shop'
+
+
