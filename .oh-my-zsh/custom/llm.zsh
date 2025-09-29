@@ -31,9 +31,10 @@ function LLM() {
   add_cmd "Claude" claude claude-code
   add_cmd "Gemini" gemini gemini-cli
   add_cmd "Codex" codex openai-codex
+  add_cmd "Copilot" copilot
 
   if (( ${#options[@]} == 0 )); then
-    echo "No supported LLM CLIs found in PATH (claude/claude-code, gemini/gemini-cli, codex)." >&2
+    echo "No supported LLM CLIs found in PATH (claude/claude-code, gemini/gemini-cli, codex, copilot)." >&2
     return 127
   fi
 
@@ -48,6 +49,9 @@ function LLM() {
         ;;
       chatgpt|codex)
         selected_cmd="codex"
+        ;;
+      copilot)
+        selected_cmd="copilot"
         ;;
     esac
     if [[ -n "$selected_cmd" ]] && command -v "$selected_cmd" >/dev/null 2>&1; then
