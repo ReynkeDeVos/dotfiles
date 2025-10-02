@@ -34,4 +34,4 @@ newvite () {
 }
 
 # Optional shortcut
-alias nv='newvite'
+alias newv='newvite'
