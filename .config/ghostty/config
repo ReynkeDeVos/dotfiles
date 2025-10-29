@@ -46,7 +46,7 @@ window-padding-balance = true
 
 # window-padding-y = 0
 
-keybind = ctrl+shift+u=toggle_tab_overview
+keybind = f12=toggle_tab_overview
 keybind = ctrl+shift+r=reload_config
 keybind = ctrl+shift+x=close_surface
 

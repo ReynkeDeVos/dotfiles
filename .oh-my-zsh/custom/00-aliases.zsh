@@ -54,3 +54,4 @@ alias weather='curl wttr.in'
 alias coffee='ssh terminal.shop'
 
 
+alias webterm='ttyd -W -t fontFamily="\"CaskaydiaCove NF\",\"Symbols Nerd Font\",monospace" -t fontSize=14 -t cursorBlink=true -t lineHeight=1.1 -t theme="{\"background\":\"#0b0e14\",\"foreground\":\"#e6e1cf\",\"cursor\":\"#ffcc66\"}" "$SHELL"'
