@@ -2,12 +2,21 @@
 	defaultBranch = main
 [core]
   editor = code --wait
+	pager = delta
 [gpg]
   format = ssh
 [commit]
   gpgsign = true
 [pull]
   rebase = true
+
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true # use n and N to move between diff sections
+[merge]
+	conflictStyle = zdiff3
+
 [alias]
   update = "!f() { \
     local branch=$(git rev-parse --abbrev-ref HEAD); \
