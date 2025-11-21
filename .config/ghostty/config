@@ -1,35 +1,24 @@
 # This is the configuration file for Ghostty.
-
 # Run `ghostty +show-config --default --docs` to view a list of
-
 # on Ghostty's website, at https://ghostty.org/docs/config.
+
 
 gtk-titlebar = false
 
 # shell-integration = zsh
 
 # theme = Brogrammer
-
 # theme = dark:"Adwaita Dark",light:"Adwaita"
-
 # theme = 0x96f
-
 # theme = catppuccin-mocha
-
 theme = dark:"Monokai Pro Spectrum",light:"Monokai Pro Light Sun"
 
 # font-family = "JetBrainsMono Nerd Font Mono"
-
 # font-family = "ComicShannsMono Nerd Font"
-
 # font-family = "MesloLGS Nerd Font Mono"
-
 # font-family = "Adwaita Mono"
-
 # font-family = "FiraCode Nerd Font Mono"
-
 # font-family = "CaskaydiaCove NFM"
-
 font-family = "FiraCode Nerd Font"
 
 font-size = 15
@@ -39,11 +28,8 @@ cursor-style-blink = false
 cursor-style = bar
 
 # this one is for nvim:
-
 window-padding-balance = true
-
 # window-padding-x = 0
-
 # window-padding-y = 0
 
 keybind = f12=toggle_tab_overview
@@ -51,7 +37,6 @@ keybind = ctrl+shift+r=reload_config
 keybind = ctrl+shift+x=close_surface
 
 # Navigate window splits
-
 keybind = ctrl+shift+h=goto_split:left
 keybind = ctrl+shift+j=goto_split:bottom
 keybind = ctrl+shift+k=goto_split:top
