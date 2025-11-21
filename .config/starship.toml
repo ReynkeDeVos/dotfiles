@@ -55,7 +55,9 @@ format = '\[[$symbol$context]($style)\]'
 symbol = " "
 
 [dotnet]
-format = '\[[$symbol($version)(🎯 $tfm)]($style)\]'
+# format = '\[[$symbol ($version)( $tfm)]($style)\]'
+format = '\[[$symbol ($version)]($style)\]'
+symbol = ""
 
 [elixir]
 format = '\[[$symbol($version \(OTP $otp_version\))]($style)\]'
