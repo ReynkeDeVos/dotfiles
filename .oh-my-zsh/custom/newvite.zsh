@@ -6,19 +6,24 @@
 # • Launches Vite dev server
 # -------------------------------------------------------------------------
 newvite () {
-  local app="${1:-my-app}"
-
-  [[ -e "$app" ]] && { echo "✖ '$app' already exists – choose another name." >&2; return 1; }
+  local default_app="${1:-my-app}"
 
   # Ensure required commands are available
   for cmd in pnpm git code; do
     command -v $cmd >/dev/null || { echo "✖ $cmd not found on PATH." >&2; return 127; }
   done
 
+  # Prompt user for directory name
+  echo -n "Enter project name (default: $default_app): "
+  read -r app
+  app="${app:-$default_app}"
+
+  [[ -e "$app" ]] && { echo "✖ '$app' already exists – choose another name." >&2; return 1; }
+
   # Prompt user to choose template
   echo "Choose a template:"
   echo "  1) React + JS + Tailwind + DaisyUI + Router (default)"
-  echo "  2) React + TypeScript + Tailwind + DaisyUI + Router"
+  echo "  2) React + TS + Tailwind + DaisyUI + Router"
   echo -n "Enter choice [1-2] (default: 1): "
   read -r choice
 
