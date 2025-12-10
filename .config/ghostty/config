@@ -21,15 +21,16 @@ theme = dark:"Monokai Pro Spectrum",light:"Monokai Pro Light Sun"
 # font-family = "CaskaydiaCove NFM"
 font-family = "FiraCode Nerd Font"
 
-font-size = 15
+font-size = 14
+# font-feature = calt, liga # on by default
 
-mouse-hide-while-typing = true
 cursor-style-blink = false
 cursor-style = bar
+mouse-hide-while-typing = true
 
 # this one is for nvim:
 window-padding-balance = true
-# window-padding-x = 0
+# window-padding-x = 2
 # window-padding-y = 0
 
 keybind = f12=toggle_tab_overview
