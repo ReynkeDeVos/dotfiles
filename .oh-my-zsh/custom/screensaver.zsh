@@ -79,47 +79,21 @@ function _screensaver_neomatrix() {
 
   echo ""
   echo "neo-matrix options:"
-  echo "  1) Cyberpunk Cyan (dark background, cyan/blue gradient)"
-  echo "  2) Purple Dream (dark purple background, purple/violet gradient)"
-  echo "  3) Amber Sunset (dark background, warm orange/amber gradient)"
+  echo "  1) Amber Sunset (dark background, warm orange/amber gradient)"
+  echo "  2) Cyberpunk 2077 (neon yellow, cyan, and magenta accents)"
+  echo "  3) Gruvbox Purple (warm purple and pink tones)"
   echo -n "Enter option (or press Enter for default): "
   read -r option
 
   if [[ -z "$option" ]]; then
-    # Default: default settings
-    neo-matrix
+    # Default: async scrolling with default background
+    neo-matrix -a -D
   else
     local colorfile
     colorfile=$(mktemp) || { echo "✖ Failed to create temporary file." >&2; return 1; }
     
     case "$option" in
       1)
-        # Cyberpunk Cyan: Dark background with bright cyan/blue gradient
-        cat > "$colorfile" <<EOF
-0
-21
-27
-33
-39
-45
-51
-EOF
-        neo-matrix -C "$colorfile"
-        ;;
-      2)
-        # Purple Dream: Dark purple background with purple/violet gradient
-        cat > "$colorfile" <<EOF
-53
-54
-55
-56
-57
-91
-129
-EOF
-        neo-matrix -C "$colorfile"
-        ;;
-      3)
         # Amber Sunset: Dark background with warm orange/amber/yellow gradient
         cat > "$colorfile" <<EOF
 0
@@ -129,6 +103,33 @@ EOF
 220
 226
 227
+EOF
+        neo-matrix -C "$colorfile"
+        ;;
+      2)
+        # Cyberpunk 2077: Neon yellow, cyan, and magenta accents
+        # Using 32-bit colors: yellow (#FCEE0C), cyan (#03D8F3), magenta accents
+        cat > "$colorfile" <<EOF
+-1
+51,12,847,953
+51,50,900,950
+51,100,850,900
+226,988,933,47
+226,950,900,100
+196,1000,67,67
+EOF
+        neo-matrix -C "$colorfile"
+        ;;
+      3)
+        # Gruvbox Purple: Warm purple and pink tones from Gruvbox palette
+        cat > "$colorfile" <<EOF
+0
+96
+132
+133
+134
+175
+211
 EOF
         neo-matrix -C "$colorfile"
         ;;
