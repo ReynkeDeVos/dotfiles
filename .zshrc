@@ -229,6 +229,10 @@ case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
+
+# npm
+export PATH=$HOME/.npm-global/bin:$PATH
+
 # Boot.dev CLI
 export PATH="$PATH:$HOME/go/bin"
 

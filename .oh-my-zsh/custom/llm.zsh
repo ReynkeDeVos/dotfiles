@@ -32,9 +32,11 @@ function LLM() {
   add_cmd "Gemini" gemini gemini-cli
   add_cmd "Codex" codex openai-codex
   add_cmd "Copilot" copilot
+  add_cmd "OpenCode" opencode
+  add_cmd "Crush" crush
 
   if (( ${#options[@]} == 0 )); then
-    echo "No supported LLM CLIs found in PATH (claude/claude-code, gemini/gemini-cli, codex, copilot)." >&2
+    echo "No supported LLM CLIs found in PATH (claude/claude-code, gemini/gemini-cli, codex, copilot, opencode, crush)." >&2
     return 127
   fi
 
@@ -52,6 +54,12 @@ function LLM() {
         ;;
       copilot)
         selected_cmd="copilot"
+        ;;
+      opencode)
+        selected_cmd="opencode"
+        ;;
+      crush)
+        selected_cmd="crush"
         ;;
     esac
     if [[ -n "$selected_cmd" ]] && command -v "$selected_cmd" >/dev/null 2>&1; then
