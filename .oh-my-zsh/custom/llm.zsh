@@ -36,42 +36,36 @@ function LLM() {
   add_cmd "Crush" crush
 
   if (( ${#options[@]} == 0 )); then
-    echo "No supported LLM CLIs found in PATH (claude/claude-code, gemini/gemini-cli, codex, copilot, opencode, crush)." >&2
+    echo "No supported LLM CLIs found in PATH." >&2
     return 127
   fi
 
   # Handle direct argument if provided
   if [[ -n "$1" ]]; then
-    case "$1" in
-      claude)
-        selected_cmd="claude"
-        ;;
-      gemini)
-        selected_cmd="gemini"
-        ;;
-      chatgpt|codex)
-        selected_cmd="codex"
-        ;;
-      copilot)
-        selected_cmd="copilot"
-        ;;
-      opencode)
-        selected_cmd="opencode"
-        ;;
-      crush)
-        selected_cmd="crush"
-        ;;
+    case "${1:l}" in # :l converts to lowercase
+      claude)   selected_cmd="claude" ;;
+      gemini)   selected_cmd="gemini" ;;
+      chatgpt|codex) selected_cmd="codex" ;;
+      copilot)  selected_cmd="copilot" ;;
+      opencode) selected_cmd="opencode" ;;
+      crush)    selected_cmd="crush" ;;
     esac
-    if [[ -n "$selected_cmd" ]] && command -v "$selected_cmd" >/dev/null 2>&1; then
-      shift # remove the llm name from arguments
-      "$selected_cmd" "$@"
-      return 0
+
+    # Attempt to find the binary for the selected alias
+    if [[ -n "$selected_cmd" ]]; then
+      # We need to find which actual binary corresponds to this selection
+      if command -v "$selected_cmd" >/dev/null 2>&1; then
+        shift
+        "$selected_cmd" "$@"
+        return 0
+      fi
     fi
   fi
 
   # If only one is available, launch it directly
   if (( ${#options[@]} == 1 )); then
     "${cmds[1]}" "$@"
+    return
   fi
 
   echo "Select LLM CLI to run:"
@@ -80,17 +74,18 @@ function LLM() {
     printf "%d) %s  " "$i" "$opt"
     ((i++))
   done
-  printf "%d) %s\n" "$i" "Cancel"
+  printf "q) Cancel\n"
 
   local choice
   while true; do
-    read -k choice 
+    echo -n "> "
+    read -k 1 choice # Read 1 char
     echo
 
-    if [[ "$choice" -ge 1 && "$choice" -le ${#options[@]} ]]; then
+    if [[ "$choice" == [qQ] ]]; then
+      return 0
+    elif [[ "$choice" =~ ^[1-9]$ ]] && (( choice <= ${#options[@]} )); then
       "${cmds[$choice]}" "$@"
-      break
-    elif [[ "$choice" -eq $i ]]; then
       break
     else
       echo "Invalid selection."
@@ -100,4 +95,3 @@ function LLM() {
 
 # Convenience: lowercase alias
 alias llm=LLM
-

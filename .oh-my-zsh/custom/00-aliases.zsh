@@ -15,43 +15,71 @@ alias ....='cd ../../..'
 # --------------------------------------------
 # LSD (Modern ls replacement) ALIASES
 # --------------------------------------------
-alias ls='lsd --group-directories-first'
+if (( $+commands[lsd] )); then
+  alias ls='lsd --group-directories-first'
+  alias lt='ls --tree'
+else
+  alias ls='ls --color=auto'
+fi
+# These rely on 'ls' being set above
 alias l='ls -l'
 alias la='ls -A'
 alias lla='ls -lA'
-alias lt='ls --tree'
+
 
 # --------------------------------------------
 # YAZI (Terminal File Manager) ALIAS
 # --------------------------------------------
-alias y='yazi'
+if (( $+commands[yazi] )); then
+  alias y='yazi'
+fi
 
 # System Monitoring
-alias top='btop'
-alias htop='btop'
+if (( $+commands[btop] )); then
+  alias top='btop'
+  alias htop='btop'
+fi
 
-alias vim='nvim'
-alias v='nvim'
-alias nv='nvim'
+if (( $+commands[nvim] )); then
+  alias vim='nvim'
+  alias v='nvim'
+  alias nv='nvim'
+fi
 
-alias lg='lazygit'
+if (( $+commands[lazygit] )); then
+  alias lg='lazygit'
+fi
 
 alias p='pnpm'
 alias idev='pnpm install && pnpm run dev'
 
-alias grep='rg --hidden --smart-case --follow'
-#(includes ignored files)
-alias grepi='rg --hidden --smart-case --follow -uu' 
+if (( $+commands[rg] )); then
+  alias grep='rg --hidden --smart-case --follow'
+  #(includes ignored files)
+  alias grepi='rg --hidden --smart-case --follow -uu' 
+fi
 
-alias cp='xcp'
-alias rm='trash -v'
-alias ping='gping'
+if (( $+commands[xcp] )); then
+  alias cp='xcp'
+fi
+
+if (( $+commands[trash] )); then
+  alias rm='trash -v'
+fi
+
+if (( $+commands[gping] )); then
+  alias ping='gping'
+fi
 
 alias oc='opencode'
-alias hx='helix'
+
+if (( $+commands[helix] )); then
+  alias hx='helix'
+fi
 
 alias weather='curl wttr.in'
 alias coffee='ssh terminal.shop'
 
-
-alias webterm='ttyd -W -t fontFamily="\"CaskaydiaCove NF\",\"Symbols Nerd Font\",monospace" -t fontSize=14 -t cursorBlink=true -t lineHeight=1.1 -t theme="{\"background\":\"#0b0e14\",\"foreground\":\"#e6e1cf\",\"cursor\":\"#ffcc66\"}" "$SHELL"'
+if (( $+commands[ttyd] )); then
+  alias webterm='ttyd -W -t fontFamily="\"CaskaydiaCove NF\",\"Symbols Nerd Font\",monospace" -t fontSize=14 -t cursorBlink=true -t lineHeight=1.1 -t theme="{\"background\":\"#0b0e14\",\"foreground\":\"#e6e1cf\",\"cursor\":\"#ffcc66\"}" "$SHELL"'
+fi
