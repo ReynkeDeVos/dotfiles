@@ -161,9 +161,9 @@ source <(carapace _carapace)
 # --------------------------------------------
 # PREFERRED EDITOR
 # --------------------------------------------
-export EDITOR='micro'
+export EDITOR='fresh'
 # Or 'nano', 'vim', 'code -w', etc.
-# export SUDO_EDITOR='micro'
+# export SUDO_EDITOR='fresh'
 
 # --------------------------------------------
 # ZSH OPTIONS (setopt / unsetopt)

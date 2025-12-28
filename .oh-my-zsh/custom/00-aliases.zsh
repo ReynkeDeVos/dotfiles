@@ -6,7 +6,7 @@
 # echo "✅ alias file loaded"
 
 alias cls='clear'
-alias zshconfig='${EDITOR:-micro} ~/.zshrc'
+alias zshconfig='${EDITOR:-fresh} ~/.zshrc'
 alias src='source ~/.zshrc && echo "Zsh config reloaded!"'
 alias ..='cd ..'
 alias ...='cd ../..'
