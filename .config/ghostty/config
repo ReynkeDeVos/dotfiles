@@ -13,13 +13,13 @@ gtk-titlebar = false
 # theme = catppuccin-mocha
 theme = dark:"Monokai Pro Spectrum",light:"Monokai Pro Light Sun"
 
-# font-family = "JetBrainsMono Nerd Font Mono"
+font-family = "JetBrainsMono Nerd Font"
 # font-family = "ComicShannsMono Nerd Font"
-# font-family = "MesloLGS Nerd Font Mono"
+# font-family = "MesloLGS Nerd Font"
 # font-family = "Adwaita Mono"
 # font-family = "FiraCode Nerd Font Mono"
 # font-family = "CaskaydiaCove NFM"
-font-family = "FiraCode Nerd Font"
+# font-family = "FiraCode Nerd Font"
 
 font-size = 14
 # font-feature = calt, liga # on by default
