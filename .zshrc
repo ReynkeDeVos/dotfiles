@@ -170,14 +170,35 @@ export PATH=$HOME/.npm-global/bin:$PATH
 export PATH="$PATH:$HOME/go/bin"
 
 # -------------------
-# Keybindings: Alt+Arrows
+# Keybindings
 # -------------------
-# backward-word on Alt+Left
-bindkey '\e[1;3D' backward-word
-# forward-word on Alt+Right
-bindkey '\e[1;3C' forward-word
-# (optionally) scroll through multiline editing on Alt+Up/Down:
-bindkey '\e[1;3A' up-line-or-history
-bindkey '\e[1;3B' down-line-or-history
+# Alt+Arrows: word navigation
+bindkey '\e[1;3D' backward-word      # Alt+Left
+bindkey '\e[1;3C' forward-word       # Alt+Right
+bindkey '\e[1;3A' up-line-or-history   # Alt+Up
+bindkey '\e[1;3B' down-line-or-history # Alt+Down
+
+# Alt+G: rga-fzf (grep through PDFs, archives, docs, etc.)
+if (( $+commands[rga] )); then
+  _rga-fzf-widget() {
+    local file
+    RG_PREFIX="rga --files-with-matches"
+    file="$(
+      FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
+        fzf --sort \
+            --height=80% \
+            --preview="[[ ! -z {} ]] && rga --pretty --context 5 {q} {}" \
+            --phony \
+            --bind "change:reload:$RG_PREFIX {q}" \
+            --preview-window="right,45%:wrap"
+    )"
+    if [[ -n "$file" ]]; then
+      LBUFFER="${LBUFFER}${file}"
+    fi
+    zle reset-prompt
+  }
+  zle -N _rga-fzf-widget
+  bindkey '\eg' _rga-fzf-widget
+fi
 
 # zprof

@@ -53,10 +53,26 @@ fi
 alias p='pnpm'
 alias idev='pnpm install && pnpm run dev'
 
-if (( $+commands[rg] )); then
-  alias grep='rg --hidden --smart-case --follow'
+if (( $+commands[rga] )); then
+  alias grep='rga --hidden --smart-case --follow'
   #(includes ignored files)
-  alias grepi='rg --hidden --smart-case --follow -uu' 
+  alias grepi='rga --hidden --smart-case --follow -uu'
+
+  # Interactive fuzzy search with rga + fzf (searches PDFs, archives, docs, etc.)
+  rga-fzf() {
+    RG_PREFIX="rga --files-with-matches"
+    local file
+    file="$(
+      FZF_DEFAULT_COMMAND="$RG_PREFIX '$1'" \
+        fzf --sort \
+            --preview="[[ ! -z {} ]] && rga --pretty --context 5 {q} {}" \
+            --phony -q "$1" \
+            --bind "change:reload:$RG_PREFIX {q}" \
+            --preview-window="70%:wrap"
+    )" &&
+    echo "Opening $file" &&
+    xdg-open "$file"
+  }
 fi
 
 if (( $+commands[xcp] )); then
