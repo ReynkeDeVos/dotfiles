@@ -11,6 +11,7 @@ gtk-titlebar = false
 # theme = dark:"Adwaita Dark",light:"Adwaita"
 # theme = 0x96f
 # theme = catppuccin-mocha
+# theme = dark:"Catppuccin Mocha",light:"Monokai Pro Light Sun"
 theme = dark:"Monokai Pro Spectrum",light:"Monokai Pro Light Sun"
 
 font-family = "JetBrainsMono Nerd Font"
