@@ -2,6 +2,12 @@
 # Run `ghostty +show-config --default --docs` to view a list of
 # on Ghostty's website, at https://ghostty.org/docs/config.
 
+# Keep Ghostty running in background for instant window opening
+# Delay before quitting after last window closes (for fast re-opens)
+quit-after-last-window-closed = true
+quit-after-last-window-closed-delay = 5m
+initial-window = false
+
 
 gtk-titlebar = false
 
