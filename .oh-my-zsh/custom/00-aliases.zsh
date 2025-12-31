@@ -5,18 +5,27 @@
 
 # echo "✅ alias file loaded"
 
-# Clean stale .zwc cache files and broken symlinks in oh-my-zsh custom dir
+# Clean stale cache files, .zwc files, and broken symlinks
 # ! renamed dotfiles → run zsh-cleanup && src to reload
 zsh-cleanup() {
   local custom_dir="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
-  echo "Cleaning stale files in $custom_dir..."
-  
-  # Remove .zwc compiled caches
+  local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}"
+  echo "Cleaning zsh caches..."
+
+  # Remove .zwc compiled caches in custom dir
   find "$custom_dir" -maxdepth 1 -name "*.zwc" -delete -print 2>/dev/null
-  
-  # Remove broken symlinks
+
+  # Remove broken symlinks in custom dir
   find "$custom_dir" -maxdepth 1 -xtype l -delete -print 2>/dev/null
-  
+
+  # Remove completion dumps
+  rm -fv "${ZDOTDIR:-$HOME}"/.zcompdump*(N) 2>/dev/null
+
+  # Remove cached init scripts (zoxide, starship, carapace)
+  rm -fv "$cache_dir"/zoxide_init.zsh 2>/dev/null
+  rm -fv "$cache_dir"/starship_init.zsh 2>/dev/null
+  rm -fv "${ZSH_CACHE_DIR:-$cache_dir}"/carapace_cache.zsh 2>/dev/null
+
   echo "Done! Run 'src' to reload."
 }
 

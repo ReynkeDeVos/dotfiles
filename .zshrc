@@ -6,17 +6,9 @@ export ZSH="$HOME/.oh-my-zsh"
 export ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
 
 # -------------------
-# CACHED COMPINIT (run before OMZ; ask OMZ to skip its own)
+# DEFER COMPINIT (let OMZ handle it, but skip checks)
 # -------------------
-export skip_global_compinit=1
-export ZSH_DISABLE_COMPFIX="true"   # we'll fix perms once; skip prompts
-autoload -Uz compinit
-# Rebuild if older than 1 day; else trust cached dump
-if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qNmh+1) ]]; then
-  compinit -i
-else
-  compinit -C -i
-fi
+export ZSH_DISABLE_COMPFIX="true"   # skip permission checks
 
 # -------------------
 # OH MY ZSH SETTINGS
@@ -55,22 +47,18 @@ plugins=(
 )
 
 # -------------------
-# LOAD OH MY ZSH (compinit already done)
+# LOAD OH MY ZSH
 # -------------------
+FPATH="$ZSH/completions:$FPATH"
 source "$ZSH/oh-my-zsh.sh"
 
 # -------------------
 # Carapace completion (https://github.com/rsteube/carapace)
-# Load after Oh My Zsh so OMZ has finished initializing.
+# -------------------
 export CARAPACE_BRIDGES='zsh'
 
 # Cosmetic completion message (optional)
-# zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m%F{244}⟫'
-# grey colours:
 zstyle ':completion:*' format '%K{244}%F{0} ⟫ %d %f%k'
-# pastel colours:
-# zstyle ':completion:*' format '%K{147}%F{0} ⟫ %d %f%k'
-# Keep results relevant (files last unless explicitly completing paths)
 zstyle ':completion:*' group-order \
   'arguments' \
   'options' \
@@ -79,16 +67,17 @@ zstyle ':completion:*' group-order \
   'paths' 'files' 'directories' \
   'parameters' 'aliases' 'functions' 'builtins' 'reserved-words' 'commands'
 
-# Register Carapace completers for zsh
-# keep CARAPACE_BRIDGES above this line so bridges are applied
+# Lazy-load Carapace: only initialize when tab completion is first used
+# This avoids 1400+ compdef calls on every shell startup
 if command -v carapace >/dev/null 2>&1; then
-  # Use OMZ cache dir if available, otherwise fallback
-  local carapace_cache="${ZSH_CACHE_DIR:-$HOME/.cache}/carapace_cache.zsh"
-  # Rebuild if cache is missing or .zshrc is newer
-  if [[ ! -f "$carapace_cache" || "$HOME/.zshrc" -nt "$carapace_cache" ]]; then
-    carapace _carapace > "$carapace_cache"
-  fi
-  source "$carapace_cache"
+  _carapace_lazy_init() {
+    # Remove this hook
+    unfunction _carapace_lazy_init 2>/dev/null
+    # Load carapace
+    source <(carapace _carapace)
+  }
+  # Hook into first completion attempt
+  compdef _carapace_lazy_init carapace
 fi
 
 # --------------------------------------------
@@ -134,7 +123,11 @@ export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:-} --height=40% --layout=reverse --i
 # ZOXIDE (Intelligent cd)
 # --------------------------------------------
 if command -v zoxide >/dev/null 2>&1; then
-  eval "$(zoxide init --cmd cd zsh)"
+  _zoxide_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zoxide_init.zsh"
+  if [[ ! -f "$_zoxide_cache" || ! -s "$_zoxide_cache" ]]; then
+    zoxide init --cmd cd zsh > "$_zoxide_cache"
+  fi
+  source "$_zoxide_cache"
 fi
 
 # --------------------------------------------
@@ -146,14 +139,18 @@ bindkey "${terminfo[kcud1]}" history-substring-search-down
 # --------------------------------------------
 # STARSHIP PROMPT INITIALIZATION
 # --------------------------------------------
-if command -v starship &> /dev/null; then
-  eval "$(starship init zsh)"
+if command -v starship &>/dev/null; then
+  _starship_cache="${XDG_CACHE_HOME:-$HOME/.cache}/starship_init.zsh"
+  if [[ ! -f "$_starship_cache" || ! -s "$_starship_cache" ]]; then
+    starship init zsh > "$_starship_cache"
+  fi
+  source "$_starship_cache"
 fi
 
 # -------------------
 # ENV/PATH
 # -------------------
-export BROWSER='google-chrome-stable' # Set your preferred browser for command-line tools.
+export BROWSER='helium-browser' # Set your preferred browser for command-line tools.
 export SSH_AUTH_SOCK=~/.1password/agent.sock # Use 1Password as the SSH Agent
 
 # pnpm
